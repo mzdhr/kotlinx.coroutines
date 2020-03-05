@@ -1051,6 +1051,8 @@ internal class SendElement(
 internal class Closed<in E>(
     @JvmField val closeCause: Throwable?
 ) : Send(), ReceiveOrClosed<E> {
+    init { closeCause.fixupForSharing() } // KT-37232 workaround
+
     val sendException: Throwable get() = closeCause ?: ClosedSendChannelException(DEFAULT_CLOSE_MESSAGE)
     val receiveException: Throwable get() = closeCause ?: ClosedReceiveChannelException(DEFAULT_CLOSE_MESSAGE)
 

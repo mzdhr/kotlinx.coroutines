@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license.
+ * Copyright 2016-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license.
  */
 
 package kotlinx.coroutines.internal
@@ -112,7 +112,13 @@ internal actual inline fun <T> ArrayList<T>.addOrUpdate(index: Int, element: T, 
 @Suppress("NOTHING_TO_INLINE")
 internal actual inline fun Any.weakRef(): Any = WeakReference(this)
 
-internal actual fun Any?.unweakRef(): Any? = (this as WeakReference<Any>?)?.get()
+@Suppress("NOTHING_TO_INLINE")
+internal actual inline fun Any?.unweakRef(): Any? = (this as WeakReference<Any>?)?.get()
+
+@Suppress("NOTHING_TO_INLINE")
+internal actual inline fun Throwable?.fixupForSharing() {
+    this?.getStackTrace() // KT-37232 workaround
+}
 
 internal open class ShareableObject<T : Any>(obj: T) {
     val thread: Thread = currentThread()

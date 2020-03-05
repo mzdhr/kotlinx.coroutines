@@ -1092,6 +1092,8 @@ public open class JobSupport constructor(active: Boolean) : Job, ChildJob, Paren
         isCompleting: Boolean,
         rootCause: Throwable?
     ) : SynchronizedObject(), Incomplete {
+        init { rootCause.fixupForSharing() } // KT-37232 workaround
+
         private val _isCompleting = atomic(isCompleting)
         var isCompleting: Boolean
             get() = _isCompleting.value
@@ -1135,6 +1137,7 @@ public open class JobSupport constructor(active: Boolean) : Job, ChildJob, Paren
 
         // guarded by `synchronized(this)`
         fun addExceptionLocked(exception: Throwable) {
+            exception.fixupForSharing() // KT-37232 workaround
             val rootCause = this.rootCause // volatile read
             if (rootCause == null) {
                 this.rootCause = exception

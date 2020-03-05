@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license.
+ * Copyright 2016-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license.
  */
 
 @file:Suppress("INVISIBLE_REFERENCE", "INVISIBLE_MEMBER")
@@ -83,3 +83,7 @@ internal actual inline fun Any.weakRef(): Any = this
 @InlineOnly
 @Suppress("NOTHING_TO_INLINE") // Should be NOP
 internal actual inline fun Any?.unweakRef(): Any? = this
+
+@InlineOnly
+@Suppress("NOTHING_TO_INLINE") // Should be NOP
+internal actual inline fun Throwable?.fixupForSharing() {} // KT-37232 workaround

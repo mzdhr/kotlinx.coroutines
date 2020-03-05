@@ -31,6 +31,8 @@ internal open class CompletedExceptionally(
     @JvmField public val cause: Throwable,
     handled: Boolean = false
 ) {
+    init { cause.fixupForSharing() } // KT-37232 workaround
+
     private val _handled = atomic(handled)
     val handled: Boolean get() = _handled.value
     fun makeHandled(): Boolean = _handled.compareAndSet(false, true)

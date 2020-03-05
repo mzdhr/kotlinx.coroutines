@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license.
+ * Copyright 2016-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license.
  */
 
 package kotlinx.coroutines.internal
@@ -24,3 +24,4 @@ internal expect fun <T> ArrayList<T>.addOrUpdate(element: T, update: (ArrayList<
 internal expect fun <T> ArrayList<T>.addOrUpdate(index: Int, element: T, update: (ArrayList<T>) -> Unit)
 internal expect fun Any.weakRef(): Any
 internal expect fun Any?.unweakRef(): Any?
+internal expect fun Throwable?.fixupForSharing() // KT-37232 workaround
