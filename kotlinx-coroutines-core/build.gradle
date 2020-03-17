@@ -225,3 +225,23 @@ task testsJar(type: Jar, dependsOn: jvmTestClasses) {
 artifacts {
     archives testsJar
 }
+
+// KT-37264 Workaround for metadata compilation problem (provide an empty metadata instead)
+afterEvaluate {
+    def emptySrcDir = new File(buildDir, "tmp/emptySrc")
+    emptySrcDir.mkdirs()
+    def emptySrcFile = new File(emptySrcDir, "EmptyKtFile.kt")
+    emptySrcFile.createNewFile()
+    def emptySrcDirs = project.objects.sourceDirectorySet("emptySrc", "empty sources for Kotlin common compilations")
+    emptySrcDirs.srcDir(emptySrcDir)
+    tasks.matching { it.name == "compileConcurrentMainKotlinMetadata" }.all {
+        doFirst {
+            emptySrcFile.text = "package kotlinx.coroutines"
+            source = fileTree(emptySrcDir)
+        }
+    }
+    kotlin.metadata { }.compilations.matching { it.name in ["nativeMain", "nativeDarwinMain", "nativeOtherMain"] }.all {
+        it.getAllSources$kotlin_gradle_plugin().clear()
+        it.getAllSources$kotlin_gradle_plugin().add(emptySrcDirs)
+    }
+}
